@@ -17,6 +17,34 @@ app.get('/', (req,res) => {
   res.sendFile(__dirname + 'index.html');
 });
 
+app.get('/api/comment', (req,res)=>{
+  return Comment
+    .find()
+    .then(commentArr=> res.json(commentArr));
+});
+
+app.post('/api/comment', (req,res)=>{
+  if(typeof req.body.text === 'undefined'){
+    console.error('Text is not instantiated');
+    res.sendStatus(400);
+  }
+
+  if(typeof req.body.likes === 'undefined'){
+    console.error('Likes is not instantiated');
+    res.sendStatus(400);
+  }
+
+  let comment = {
+    text: req.body.text,
+    likes: req.body.likes
+  };
+
+  Comment
+  .create(comment)
+  .then(comment=>res.status(201).json(comment));
+});
+
+
 let server;
 function runServer(port=3001,databaseUrl=DATABASE_URL) {
   //console.log(databaseUrl);

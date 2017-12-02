@@ -3,7 +3,8 @@
 const mongoose = require('mongoose');
 
 const commentsSchema = mongoose.Schema({
-  comments:[{text:String, likes:Number}]
+  text:{type:String, required:true}, 
+  likes:{type: Number, required:true}
 });
 
 const Comment = mongoose.model('Comment',commentsSchema);

@@ -1,16 +1,27 @@
 let comment_app = angular.module('comment_app', []);
 
-comment_app.service('commentObj', function() {
+comment_app.service('commentObj', function($http) {
   this.comments = [];
 
   this.getComments = function() {
-    return this.comments;
+    return $http.get('/api/comment')
+            .then(res=>{
+              console.log(res);
+              if(res.statusText !== 'OK' && res.status !== '200'){
+                return Promise.reject(res.statusText);
+              }
+              return res.data;
+            });
   };
 });
 
 comment_app.controller('CommentController', function($scope, commentObj) {
-  $scope.comments = commentObj.getComments();
-
+  //$scope.comments = [];
+  commentObj
+    .getComments()
+    .then(function(result) {
+      $scope.comments = result;
+    });
   $scope.addComments = function() {
     $scope.comments.push({
       text: $scope.newText,
